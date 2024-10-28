@@ -10,6 +10,22 @@ body {
   filter: invert(1);
 }
 
+.cl-userButtonPopoverActionButton {
+  color: white;
+}
+
+.cl-userButtonPopoverActionButton:hover {
+  color: #cb3cff;
+}
+
+.cl-navbarButton {
+  color: white;
+}
+/* Active button with all its classes for higher specificity if needed */
+.cl-navbarButton.cl-button.cl-active {
+  color: #cb3cff;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
