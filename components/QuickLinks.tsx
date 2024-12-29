@@ -1,18 +1,74 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import React, { useState } from "react";
-import HomeCard from "./HomeCard";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarClock, Link, Plus, Video } from "lucide-react";
+
+import HomeCard from "./HomeCard";
 import MeetingModal from "./MeetingModal";
+import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { useUser } from "@clerk/nextjs";
+import Loader from "./Loader";
+// import { Textarea } from "./ui/textarea";
+// import ReactDatePicker from "react-datepicker";
+
+// import { Input } from "./ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { CalendarClock, Link, Plus, Video } from "lucide-react";
+
+const initialValues = {
+  dateTime: new Date(),
+  description: "",
+  link: "",
+};
 
 function QuickLinks() {
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [meetingState, setMeetingState] = useState<
     "isScheduleMeeting" | "isJoiningMeeting" | "isInstantMeeting" | undefined
   >(undefined);
+  const [values, setValues] = useState(initialValues);
+  const [callDetail, setCallDetail] = useState<Call>();
+  const client = useStreamVideoClient();
+  const { user } = useUser();
+  const { toast } = useToast();
 
-  const createMeeting = async () => {};
+  const createMeeting = async () => {
+    if (!client || !user) return;
+    try {
+      if (!values.dateTime) {
+        toast({ title: "Please select a date and time" });
+        return;
+      }
+      const id = crypto.randomUUID();
+      const call = client.call("default", id);
+      if (!call) throw new Error("Failed to create meeting");
+      const startsAt =
+        values.dateTime.toISOString() || new Date(Date.now()).toISOString();
+      const description = values.description || "Instant Meeting";
+      await call.getOrCreate({
+        data: {
+          starts_at: startsAt,
+          custom: {
+            description,
+          },
+        },
+      });
+      setCallDetail(call);
+      if (!values.description) {
+        router.push(`/meeting/${call.id}`);
+      }
+      toast({
+        title: "Meeting Created",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({ title: "Failed to create Meeting" });
+    }
+  };
+
+  if (!client || !user) return <Loader />;
+
+  // const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${callDetail?.id}`;
 
   return (
     <div className="mt-8 md:mt-12 border border-gray-900/80 px-6 md:px-10 p-10 rounded-xl">
