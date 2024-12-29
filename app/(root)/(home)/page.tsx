@@ -15,12 +15,14 @@ const Home = () => {
   return (
     <div>
       <p className="text-white/90 text-sm">Welcome,</p>
-      <h1 className="text-2xl font-bold text-white">{user?.fullName}</h1>
+      <h1 className="text-xl md:text-2xl font-bold text-white">
+        {user?.fullName}
+      </h1>
 
-      <div className="flex items-center justify-between mt-12 border border-gray-900/80 px-10 p-6 rounded-xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mt-10 border border-gray-900/80 px-6 md:px-10 p-6 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="flex flex-col gap-2">
-            <span className="text-white flex items-center gap-1.5">
+            <span className="text-white flex items-center gap-1.5 text-sm md:text-base">
               <CalendarDaysIcon size={16} />
               <span className="mt-1">{month}</span>
             </span>
@@ -31,7 +33,7 @@ const Home = () => {
         </div>
         <Link
           href={"personal-room"}
-          className="text-white bg-dark-2 hover:bg-dark-2/90 p-2 px-3 rounded-md flex items-center gap-1 shadow-sm"
+          className="text-white text-sm md:text-base bg-dark-2 hover:bg-dark-2/90 p-2 px-3 rounded-md flex items-center gap-1 shadow-sm w-fit"
         >
           <User size={20} /> Personal Room
         </Link>

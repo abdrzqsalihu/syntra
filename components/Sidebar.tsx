@@ -19,7 +19,7 @@ function Sidebar() {
   const pathname = usePathname();
   const { user } = useUser();
   return (
-    <div className="md:flex h-screen flex-col justify-between border-e-2 border-dark-3 bg-dark-1 hidden md:w-[13%]">
+    <div className="lg:flex h-screen flex-col justify-between border-e-2 border-dark-3 bg-dark-1 hidden md:w-[13%]">
       <div className="px-4 py-6">
         <ul className="mt-24 space-y-5">
           {sidebarLinks.map((link) => {

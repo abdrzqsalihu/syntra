@@ -38,7 +38,7 @@ const MobileNav = () => {
     <section className="w-full max-w-[260px]">
       <Sheet>
         <SheetTrigger asChild>
-          <button className="sm:hidden" aria-label="Open navigation menu">
+          <button className="lg:hidden" aria-label="Open navigation menu">
             <Menu size={27} className="text-white cursor-pointer mt-1.5" />
           </button>
         </SheetTrigger>
