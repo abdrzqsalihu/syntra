@@ -1,4 +1,5 @@
 "use client";
+import QuickLinks from "@/components/QuickLinks";
 import { useUser } from "@clerk/nextjs";
 import { CalendarDaysIcon, User } from "lucide-react";
 import Link from "next/link";
@@ -38,6 +39,8 @@ const Home = () => {
           <User size={20} /> Personal Room
         </Link>
       </div>
+
+      <QuickLinks />
     </div>
   );
 };
