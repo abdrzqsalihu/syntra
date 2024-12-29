@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import HomeCard from "./HomeCard";
 import { useRouter } from "next/navigation";
 import { CalendarClock, Link, Plus, Video } from "lucide-react";
+import MeetingModal from "./MeetingModal";
 
 function QuickLinks() {
   const router = useRouter();
@@ -10,6 +11,9 @@ function QuickLinks() {
   const [meetingState, setMeetingState] = useState<
     "isScheduleMeeting" | "isJoiningMeeting" | "isInstantMeeting" | undefined
   >(undefined);
+
+  const createMeeting = async () => {};
+
   return (
     <div className="mt-8 md:mt-12 border border-gray-900/80 px-6 md:px-10 p-10 rounded-xl">
       <h1 className="text-base md:text-xl font-bold text-white">
@@ -46,6 +50,15 @@ function QuickLinks() {
           handleClick={() => router.push("/recordings")}
         />
       </section>
+
+      <MeetingModal
+        isOpen={meetingState === "isInstantMeeting"}
+        onClose={() => setMeetingState(undefined)}
+        title="Start an Instant Meeting"
+        className="text-center"
+        buttonText="Start Meeting"
+        handleClick={createMeeting}
+      />
     </div>
   );
 }
