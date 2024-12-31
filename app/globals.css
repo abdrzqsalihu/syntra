@@ -6,26 +6,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.cl-providerIcon__apple {
-  filter: invert(1);
-}
-
-.cl-userButtonPopoverActionButton {
-  color: white;
-}
-
-.cl-userButtonPopoverActionButton:hover {
-  color: #cb3cff;
-}
-
-.cl-navbarButton {
-  color: white;
-}
-/* Active button with all its classes for higher specificity if needed */
-.cl-navbarButton.cl-button.cl-active {
-  color: #cb3cff;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -90,3 +70,80 @@ body {
     @apply bg-background text-foreground;
   }
 } */
+
+
+/* CLERK CSS OVERIDE  */
+.cl-providerIcon__apple {
+  filter: invert(1);
+}
+
+.cl-userButtonPopoverActionButton {
+  color: white;
+}
+
+.cl-userButtonPopoverActionButton:hover {
+  color: #cb3cff;
+}
+
+.cl-navbarButton {
+  color: white;
+}
+/* Active button with all its classes for higher specificity if needed */
+.cl-navbarButton.cl-button.cl-active {
+  color: #cb3cff;
+}
+
+/* ======== stream css overrides ======== */
+.str-video__call-stats {
+  max-width: 500px;
+  position: relative;
+}
+
+.str-video__speaker-layout__wrapper {
+  max-height: 700px;
+}
+
+.str-video__participant-details {
+  color: white;
+}
+
+.str-video__menu-container {
+  color: white;
+}
+
+.str-video__notification {
+  color: white;
+}
+
+.str-video__participant-list {
+  background-color: #1c1f2e;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+  height: 100%;
+}
+
+.str-video__call-controls__button {
+  height: 40px;
+}
+
+/* animation */
+
+.show-block {
+  width: 100%;
+  max-width: 350px;
+  display: block;
+  animation: show 0.7s forwards linear;
+}
+
+@keyframes show {
+  0% {
+    animation-timing-function: ease-in;
+    width: 0%;
+  }
+
+  100% {
+    animation-timing-function: ease-in;
+    width: 100%;
+  }
+}

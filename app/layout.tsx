@@ -4,6 +4,8 @@ import "./globals.css";
 import { Nunito } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toaster";
+import "@stream-io/video-react-sdk/dist/css/styles.css";
+
 const nunito = Nunito({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
