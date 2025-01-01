@@ -1,10 +1,10 @@
-import { Loader2 } from "lucide-react";
+import { LucideLoader } from "lucide-react";
 import React from "react";
 
 function Loader() {
   return (
-    <div className="flex-center h-screen w-full">
-      <Loader2 className="animate-spin" />
+    <div className="flex justify-center items-center w-full">
+      <LucideLoader className="animate-spin" />
     </div>
   );
 }
