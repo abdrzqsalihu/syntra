@@ -97,6 +97,16 @@ body {
   border: rgb(17 24 39 / 0.8) solid 2px !important;
 }
 
+.cl-socialButtonsIconButton {
+  border: rgb(17 24 39 / 0.8) solid 1px !important;
+  padding: 13px;
+}
+
+.cl-socialButtons {
+  display: flex;
+  justify-content: center;
+}
+
 /* ======== stream css overrides ======== */
 .str-video__call-stats {
   max-width: 500px;
