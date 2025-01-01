@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { Home, CalendarClock, FolderOpen, Video, UserPlus } from "lucide-react";
+import { Home, CalendarClock, FolderOpen, Video, User } from "lucide-react";
 import { UserButton, useUser } from "@clerk/nextjs";
 
 function Sidebar() {
@@ -14,7 +14,7 @@ function Sidebar() {
     CalendarClock,
     FolderOpen,
     Video,
-    UserPlus,
+    User,
   };
   const pathname = usePathname();
   const { user } = useUser();
@@ -56,7 +56,7 @@ function Sidebar() {
         <div>
           <p className="text-xs">
             <strong className="block font-medium mb-[0.1rem] text-gray-50">
-              {user?.fullName}
+              {user?.fullName || user?.username}
             </strong>
             <span className="text-gray-200">
               {" "}

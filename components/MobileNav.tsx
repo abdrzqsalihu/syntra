@@ -17,7 +17,7 @@ import {
   CalendarClock,
   FolderOpen,
   Video,
-  UserPlus,
+  User,
   Menu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -29,7 +29,7 @@ const MobileNav = () => {
     CalendarClock,
     FolderOpen,
     Video,
-    UserPlus,
+    User,
   };
 
   const pathname = usePathname();

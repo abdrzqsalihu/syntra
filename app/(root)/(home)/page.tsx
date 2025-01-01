@@ -17,7 +17,7 @@ const Home = () => {
     <div>
       <p className="text-white/90 text-sm">Welcome,</p>
       <h1 className="text-xl md:text-2xl font-bold text-white">
-        {user?.fullName}
+        {user?.fullName || user?.username}
       </h1>
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mt-10 border border-gray-900/80 px-6 md:px-10 p-6 rounded-xl">

@@ -38,9 +38,9 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
   const getNoCallsMessage = () => {
     switch (type) {
       case "ended":
-        return "No Previous Calls";
+        return "No Previous Meeting";
       case "upcoming":
-        return "No Upcoming Calls";
+        return "No Upcoming Meeting";
       case "recordings":
         return "No Recordings";
       default:
@@ -129,7 +129,9 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
           />
         ))
       ) : (
-        <h1 className="text-2xl font-bold text-white">{noCallsMessage}</h1>
+        <h1 className="col-span-3 text-sm md:text-xl text-center font-bold text-white border-y border-gray-900/90 py-4">
+          {noCallsMessage}
+        </h1>
       )}
     </div>
   );
