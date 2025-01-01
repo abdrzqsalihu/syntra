@@ -118,7 +118,7 @@ function QuickLinks() {
         <MeetingModal
           isOpen={meetingState === "isScheduleMeeting"}
           onClose={() => setMeetingState(undefined)}
-          title="Create Meeting"
+          title="Schedule New Meeting"
           handleClick={createMeeting}
         >
           <div className="flex flex-col gap-2.5">

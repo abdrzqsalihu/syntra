@@ -47,36 +47,23 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
         return "";
     }
   };
-
   useEffect(() => {
     const fetchRecordings = async () => {
-      if (!callRecordings?.length) return;
-
       setIsLoadingRecordings(true);
+
       try {
         const callData = await Promise.all(
-          callRecordings.map(async (meeting) => {
-            try {
-              return await meeting.queryRecordings();
-            } catch (error) {
-              console.error(`Failed to fetch recording for meeting:`, error);
-              return { recordings: [] };
-            }
-          })
+          callRecordings?.map((meeting) => meeting.queryRecordings()) ?? []
         );
 
-        const fetchedRecordings = callData
-          .filter((call) => call?.recordings?.length > 0)
+        const recordings = callData
+          .filter((call) => call.recordings.length > 0)
           .flatMap((call) => call.recordings);
 
-        setRecordings(fetchedRecordings);
+        setRecordings(recordings);
       } catch (error) {
-        console.error("Failed to fetch recordings:", error);
-        toast({
-          title: "Failed to load recordings",
-          description: "Please try again later",
-          variant: "destructive",
-        });
+        console.error(error);
+        toast({ title: "Try again later" });
       } finally {
         setIsLoadingRecordings(false);
       }

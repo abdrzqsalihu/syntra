@@ -36,7 +36,12 @@ const MeetingModal = ({
         <div className="flex flex-col gap-6">
           {icon && <div className="flex justify-center">{icon}</div>}
 
-          <div className={cn("text-2xl font-bold leading-2", className)}>
+          <div
+            className={cn(
+              "text-2xl font-bold leading-2 text-center",
+              className
+            )}
+          >
             <DialogTitle>{title || "Dialog"}</DialogTitle>
           </div>
           {children}
