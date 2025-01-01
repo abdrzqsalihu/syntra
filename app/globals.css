@@ -71,7 +71,6 @@ body {
   }
 } */
 
-
 /* CLERK CSS OVERIDE  */
 .cl-providerIcon__apple {
   filter: invert(1);
@@ -91,6 +90,11 @@ body {
 /* Active button with all its classes for higher specificity if needed */
 .cl-navbarButton.cl-button.cl-active {
   color: #cb3cff;
+}
+
+.cl-internal-1rtobsb {
+  color: white;
+  border: rgb(17 24 39 / 0.8) solid 2px !important;
 }
 
 /* ======== stream css overrides ======== */
