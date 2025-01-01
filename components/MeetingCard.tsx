@@ -31,8 +31,8 @@ const MeetingCard = ({
   const { toast } = useToast();
 
   return (
-    <section className="flex min-h-[258px] w-full flex-col justify-between rounded-lg bg-dark-3/80 px-8 py-8 xl:max-w-[568px]">
-      <article className="flex flex-col gap-5">
+    <section className="flex w-full flex-col gap-3 justify-between rounded-lg bg-dark-3/80 px-8 py-10 xl:max-w-[568px]">
+      <article className="flex flex-col gap-3">
         {icon}
         <div className="flex justify-between">
           <div className="flex flex-col gap-2">

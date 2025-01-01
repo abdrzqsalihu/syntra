@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useGetCalls } from "@/hooks/useGetCall";
 import MeetingCard from "./MeetingCard";
-import { CalendarClock } from "lucide-react";
+import { CalendarClock, LucideCalendarFold } from "lucide-react";
 
 const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
   const router = useRouter();
@@ -81,7 +81,7 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
             key={(meeting as Call).id}
             icon={
               type === "ended" ? (
-                "/icons/previous.svg"
+                <LucideCalendarFold size={25} />
               ) : type === "upcoming" ? (
                 <CalendarClock size={25} />
               ) : (
