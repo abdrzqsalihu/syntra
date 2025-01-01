@@ -1,22 +1,25 @@
 "use client";
 
 import { Call, CallRecording } from "@stream-io/video-react-sdk";
-
 import Loader from "./Loader";
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { useToast } from "@/hooks/use-toast";
 import { useGetCalls } from "@/hooks/useGetCall";
 import MeetingCard from "./MeetingCard";
-import { CalendarClock, LucideCalendarFold } from "lucide-react";
+import {
+  CalendarClock,
+  LucideCalendarFold,
+  PlayCircle,
+  Video,
+} from "lucide-react";
 
 const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
   const router = useRouter();
   const { endedCalls, upcomingCalls, callRecordings, isLoading } =
     useGetCalls();
   const [recordings, setRecordings] = useState<CallRecording[]>([]);
+  const [isLoadingRecordings, setIsLoadingRecordings] = useState(false);
   const { toast } = useToast();
 
   const getCalls = () => {
@@ -47,19 +50,35 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
 
   useEffect(() => {
     const fetchRecordings = async () => {
+      if (!callRecordings?.length) return;
+
+      setIsLoadingRecordings(true);
       try {
         const callData = await Promise.all(
-          callRecordings?.map((meeting) => meeting.queryRecordings()) ?? []
+          callRecordings.map(async (meeting) => {
+            try {
+              return await meeting.queryRecordings();
+            } catch (error) {
+              console.error(`Failed to fetch recording for meeting:`, error);
+              return { recordings: [] };
+            }
+          })
         );
 
-        const recordings = callData
-          .filter((call) => call.recordings.length > 0)
+        const fetchedRecordings = callData
+          .filter((call) => call?.recordings?.length > 0)
           .flatMap((call) => call.recordings);
 
-        setRecordings(recordings);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        setRecordings(fetchedRecordings);
       } catch (error) {
-        toast({ title: "Try again later" });
+        console.error("Failed to fetch recordings:", error);
+        toast({
+          title: "Failed to load recordings",
+          description: "Please try again later",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingRecordings(false);
       }
     };
 
@@ -68,7 +87,11 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
     }
   }, [type, callRecordings, toast]);
 
+  // Show loader while initial data is loading
   if (isLoading) return <Loader />;
+
+  // Show loader while recordings are being fetched
+  if (type === "recordings" && isLoadingRecordings) return <Loader />;
 
   const calls = getCalls();
   const noCallsMessage = getNoCallsMessage();
@@ -78,14 +101,18 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
       {calls && calls.length > 0 ? (
         calls.map((meeting: Call | CallRecording) => (
           <MeetingCard
-            key={(meeting as Call).id}
+            key={
+              type === "recordings"
+                ? (meeting as CallRecording).url
+                : (meeting as Call).id
+            }
             icon={
               type === "ended" ? (
                 <LucideCalendarFold size={25} />
               ) : type === "upcoming" ? (
                 <CalendarClock size={25} />
               ) : (
-                "/icons/recordings.svg"
+                <Video size={25} />
               )
             }
             title={
@@ -105,7 +132,7 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
                     (meeting as Call).id
                   }`
             }
-            buttonIcon1={type === "recordings" ? "/icons/play.svg" : undefined}
+            buttonIcon1={type === "recordings" ? <PlayCircle /> : undefined}
             buttonText={type === "recordings" ? "Play" : "Start"}
             handleClick={
               type === "recordings"

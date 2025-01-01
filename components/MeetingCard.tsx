@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -12,7 +10,7 @@ interface MeetingCardProps {
   date: string;
   icon: React.ReactNode;
   isPreviousMeeting?: boolean;
-  buttonIcon1?: string;
+  buttonIcon1?: React.ReactNode;
   buttonText?: string;
   handleClick: () => void;
   link: string;
@@ -46,11 +44,12 @@ const MeetingCard = ({
       <article className={cn("flex md:justify-end relative", {})}>
         {!isPreviousMeeting && (
           <div className="flex gap-2.5">
-            <Button onClick={handleClick} className="rounded-md bg-dark-2 px-8">
-              {buttonIcon1 && (
-                <Image src={buttonIcon1} alt="feature" width={20} height={20} />
-              )}
-              &nbsp; {buttonText}
+            <Button
+              onClick={handleClick}
+              className="rounded-md bg-dark-2 px-8 flex gap-1"
+            >
+              {buttonIcon1 && <div>{buttonIcon1}</div>}
+              {buttonText}
             </Button>
             <Button
               onClick={() => {
