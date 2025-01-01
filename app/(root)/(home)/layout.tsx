@@ -5,7 +5,11 @@ import React, { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Syntra",
-  description: "Video calling App",
+  description:
+    "Manage, join, schedule meetings, and access past recordings, all in one app.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
