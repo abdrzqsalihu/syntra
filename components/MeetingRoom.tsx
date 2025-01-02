@@ -18,14 +18,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LayoutList, Users } from "lucide-react";
+import { Copy, LayoutList, Users } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Loader from "./Loader";
 import EndCallButton from "./EndCallButton";
+import { useToast } from "@/hooks/use-toast";
 
 type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 const MeetingRoom = () => {
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const router = useRouter();
   const isPersonalRoom = !!searchParams.get("personal");
@@ -50,8 +52,22 @@ const MeetingRoom = () => {
     }
   };
 
+  interface GetMeetingId {
+    (url: string): string;
+  }
+
+  const getMeetingId: GetMeetingId = (url) => {
+    return url.split("/meeting/")[1];
+  };
+
+  const url = window.location.href;
+
+  const meetingId = getMeetingId(url);
+
+  const meetingLink = `/meeting/${meetingId}`;
+
   return (
-    <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
+    <section className="relative h-screen w-full overflow-hidden pt-4 text-white ">
       <div className="relative flex size-full items-center justify-center">
         <div className="flex size-full max-w-[1000px] items-center">
           <CallLayout />
@@ -66,7 +82,7 @@ const MeetingRoom = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 flex w-full items-center justify-center gap-5 flex-wrap">
+      <div className="fixed bottom-4 flex w-full items-center justify-center gap-5 flex-wrap px-3">
         <CallControls onLeave={() => router.push("/")} />
 
         <DropdownMenu>
@@ -92,13 +108,33 @@ const MeetingRoom = () => {
           </DropdownMenuContent>
         </DropdownMenu>
         <CallStatsButton />
+
         <button onClick={() => setShowParticipants((prev) => !prev)}>
           <div className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]">
             <Users size={20} className="text-white" />
           </div>
         </button>
 
-        {!isPersonalRoom && <EndCallButton />}
+        <div className="flex items-center gap-5">
+          {!isPersonalRoom && (
+            <div>
+              <button
+                className="cursor-pointer rounded-lg bg-dark-4 border border-gray-900/80 px-4 py-3.5 flex items-center text-xs gap-2 hover:opacity-90"
+                onClick={() => {
+                  navigator.clipboard.writeText(meetingLink);
+                  toast({
+                    title: "Link Copied",
+                  });
+                }}
+              >
+                {" "}
+                <Copy size={14} /> Copy Meet link
+              </button>
+            </div>
+          )}
+
+          {!isPersonalRoom && <EndCallButton />}
+        </div>
       </div>
     </section>
   );

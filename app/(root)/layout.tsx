@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import StreamVideoProvider from "@/providers/StreamClientProvider";
 import { Metadata } from "next";
 import React, { ReactNode } from "react";
@@ -15,6 +16,7 @@ function RootLayout({ children }: { children: ReactNode }) {
   return (
     <main>
       <StreamVideoProvider>{children}</StreamVideoProvider>
+      <Toaster />
     </main>
   );
 }
