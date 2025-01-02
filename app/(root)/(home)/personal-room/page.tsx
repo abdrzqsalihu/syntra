@@ -55,7 +55,7 @@ const PersonalRoom = () => {
                 id="room-id"
                 value={`${user?.username}'s Meeting Room`}
                 readOnly
-                className="rounded bg-dark-4 border border-gray-800/80 w-[90%]  md:w-full"
+                className="rounded bg-dark-4 border border-gray-800/80 w-full"
               />
             </div>
           </div>
