@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
 import ServiceWorker from "@/components/ServiceWorker";
+import { Analytics } from "@vercel/analytics/next";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -52,6 +53,7 @@ export default function RootLayout({
           suppressHydrationWarning={true}
         >
           {children}
+          <Analytics />
           <ServiceWorker />
           <Toaster />
         </body>
