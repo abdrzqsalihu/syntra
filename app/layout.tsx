@@ -29,6 +29,7 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         layout: {
+          unsafe_disableDevelopmentModeWarnings: true,
           logoImageUrl: "/logo-2.png",
           socialButtonsVariant: "iconButton",
         },
