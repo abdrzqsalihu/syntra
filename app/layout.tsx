@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 import { Nunito } from "next/font/google";
@@ -10,6 +10,9 @@ import ServiceWorker from "@/components/ServiceWorker";
 import { Analytics } from "@vercel/analytics/next";
 
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
+
+// Lets the call UI use the full screen and respect device safe areas.
+export const viewport: Viewport = { viewportFit: "cover" };
 
 export const metadata: Metadata = {
   title: { default: "Syntra", template: "%s · Syntra" },

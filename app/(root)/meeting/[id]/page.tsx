@@ -2,9 +2,11 @@
 import Loader from "@/components/Loader";
 import MeetingRoom from "@/components/MeetingRoom";
 import MeetingSetup from "@/components/MeetingSetup";
+import { Button } from "@/components/ui/button";
 import { useGetCallById } from "@/hooks/useGetCallById";
 import { useUser } from "@clerk/nextjs";
 import { StreamCall, StreamTheme } from "@stream-io/video-react-sdk";
+import Link from "next/link";
 import React, { useState } from "react";
 
 interface PageProps {
@@ -14,17 +16,34 @@ interface PageProps {
 const Meeting = ({ params }: PageProps) => {
   // Unwrap the params Promise using React.use()
   const { id } = React.use(params);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { user, isLoaded } = useUser();
+  const { isLoaded } = useUser();
   const [isSetupComplete, setIsSetupComplete] = useState(false);
   const { call, isCallLoading } = useGetCallById(id);
 
-  if (!isLoaded || isCallLoading) return <Loader />;
+  if (!isLoaded || isCallLoading)
+    return (
+      <div className="flex h-dvh items-center justify-center bg-ink text-white">
+        <Loader />
+      </div>
+    );
+
+  if (!call)
+    return (
+      <main className="flex h-dvh flex-col items-center justify-center gap-4 bg-ink px-6 text-center text-white">
+        <h1 className="text-2xl font-bold">Meeting not found</h1>
+        <p className="max-w-sm text-sm text-white/70">
+          This meeting link may be incorrect, or the meeting is no longer available.
+        </p>
+        <Button asChild variant="accent">
+          <Link href="/dashboard">Back to dashboard</Link>
+        </Button>
+      </main>
+    );
 
   return (
-    <main className="h-screen w-full">
+    <main className="h-dvh w-full bg-ink">
       <StreamCall call={call}>
-        <StreamTheme>
+        <StreamTheme className="syntra-call h-full">
           {!isSetupComplete ? (
             <MeetingSetup setIsSetupComplete={setIsSetupComplete} />
           ) : (

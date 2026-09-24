@@ -154,32 +154,196 @@
   position: relative;
 }
 
-.str-video__speaker-layout__wrapper {
-  max-height: 700px;
-}
-
-.str-video__participant-details {
-  color: white;
-}
-
-.str-video__menu-container {
-  color: white;
-}
-
+.str-video__menu-container,
 .str-video__notification {
   color: white;
 }
 
-.str-video__participant-list {
-  background-color: #1c1f2e;
-  padding: 10px;
-  border-radius: 10px;
+/* ======== Syntra call theme: Stream variables mapped to the dashboard palette ======== */
+.str-video.syntra-call {
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  --str-video__primary-color: #cb3cff;
+  --str-video__secondary-color: #e08bff;
+  --str-video__text-color1: #ffffff;
+  --str-video__text-color2: rgb(255 255 255 / 0.72);
+  --str-video__text-color3: rgb(255 255 255 / 0.5);
+  --str-video__background-color0: #01000f;
+  --str-video__background-color1: #000519;
+  --str-video__background-color2: #0b1024;
+  --str-video__background-color4: #01000f;
+  --str-video__background-color5: #0b1024;
+  --str-video__danger-color: #ff5454;
+  --str-video__border-radius-sm: 10px;
+  --str-video__border-radius-md: 14px;
+  --str-video__border-radius-lg: 16px;
+}
+
+/* Tiles */
+.syntra-call .str-video__participant-view {
+  border-radius: 14px;
+  background: #000519;
+  border: 1px solid rgb(17 24 39 / 0.8);
+  overflow: hidden;
+}
+.syntra-call .str-video__participant-view--speaking {
+  outline: 2px solid #cb3cff;
+  outline-offset: -2px;
+}
+.syntra-call .str-video__video-placeholder {
+  background: linear-gradient(135deg, #000519, #0b1024 60%, #1a0f2e);
+}
+.syntra-call .str-video__participant-details {
+  left: 8px;
+  bottom: 8px;
+  padding: 0;
+  background: none;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+.syntra-call .str-video__participant-details__name {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgb(1 0 15 / 0.72);
+  backdrop-filter: blur(6px);
+}
+
+/* Layouts fill the stage instead of being capped */
+.syntra-call .str-video__speaker-layout__wrapper {
+  max-height: none;
+  height: 100%;
+}
+.syntra-call .str-video__speaker-layout {
+  gap: 8px;
+  padding: 0;
+}
+.syntra-call .str-video__speaker-layout .str-video__speaker-layout__spotlight .str-video__participant-view {
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%;
+}
+.syntra-call .str-video__paginated-grid-layout {
+  height: 100%;
+}
+@media (max-width: 767px) {
+  /* Phones: the speaker fills the stage, other participants sit in a compact strip below */
+  .syntra-call .str-video__speaker-layout--variant-bottom {
+    gap: 8px;
+  }
+  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__spotlight {
+    flex: 1 1 0;
+    min-height: 0;
+    height: auto;
+  }
+  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar-buttons-wrapper {
+    flex: none;
+  }
+  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar {
+    gap: 8px;
+  }
+  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar-wrapper .str-video__speaker-layout__participants-bar .str-video__speaker-layout__participant-tile {
+    width: 104px;
+    min-width: 104px;
+    max-width: none;
+    padding: 0;
+  }
+  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__participant-view {
+    aspect-ratio: 3 / 4;
+    max-width: none;
+  }
+  .syntra-call .str-video__participant-details {
+    left: 6px;
+    bottom: 6px;
+    font-size: 11px;
+  }
+  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar-buttons-wrapper .str-video__avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* Avatars (camera off): soft violet tint instead of a solid fill */
+.syntra-call .str-video__avatar--initials-fallback {
+  background-color: rgb(203 60 255 / 0.18);
+  border: 1px solid rgb(203 60 255 / 0.35);
+  color: #fff;
+  font-weight: 700;
+}
+
+.syntra-call .str-video__video-placeholder .str-video__video-placeholder__initials-fallback {
+  background-color: rgb(203 60 255 / 0.18);
+  border: 1px solid rgb(203 60 255 / 0.35);
+  color: #fff;
+}
+@media (max-width: 767px) {
+  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar .str-video__video-placeholder__initials-fallback,
+  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar .str-video__video-placeholder__avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+/* Stream's stats button, matched to our control buttons */
+.syntra-call .str-video__composite-button__button-group {
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.07);
+  border: 1px solid rgb(17 24 39 / 0.8);
+}
+.syntra-call .str-video__composite-button__button-group .str-video__call-controls__button {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: transparent;
+}
+
+/* Participant list panel */
+.syntra-call .str-video__participant-list {
+  background-color: #000519;
+  border: 1px solid rgb(17 24 39 / 0.8);
+  border-radius: 14px;
+  padding: 12px;
   color: white;
   height: 100%;
 }
 
-.str-video__call-controls__button {
-  height: 40px;
+/* Setup preview fills its frame; the frame supplies the border and radius */
+.syntra-call .str-video__video-preview-container {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.syntra-call .str-video__video-preview-container .str-video__video-preview {
+  object-fit: cover;
+}
+
+/* Device selectors in setup and the devices sheet */
+.syntra-call .str-video__device-settings__device-kind {
+  padding: 0;
+}
+.syntra-call .str-video__device-settings__device-selector-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.5);
+  padding-bottom: 0;
+  margin-bottom: 8px;
+}
+.syntra-call .str-video__dropdown-selected {
+  background: #01000f;
+  border: 1px solid rgb(17 24 39 / 0.9);
+  border-radius: 10px;
+  min-height: 44px;
+}
+.syntra-call .str-video__dropdown-selected:hover {
+  border-color: rgb(31 41 55);
+}
+.syntra-call .str-video__device-settings__option--selected,
+.syntra-call .str-video__dropdown-select__option--selected {
+  color: #cb3cff;
 }
 
 /* animation */

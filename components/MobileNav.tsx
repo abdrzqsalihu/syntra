@@ -46,7 +46,7 @@ const MobileNav = () => {
           <SheetTitle className="text-white sr-only">
             Navigation Menu
           </SheetTitle>
-          <Link href="/dashboard" className="flex items-center gap-1">
+          <Link href="/" aria-label="Syntra home" className="flex items-center gap-1">
             <Image src="/logo-2.png" width={100} height={100} alt="Syntra" />
           </Link>
 
