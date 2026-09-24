@@ -30,7 +30,7 @@ export const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
     setVideoClient(client);
   }, [user, isLoaded]);
 
-  if (!videoClient) return <Loader />;
+  if (!videoClient) return <Loader fullscreen />;
 
   return <StreamVideo client={videoClient}>{children}</StreamVideo>;
 };

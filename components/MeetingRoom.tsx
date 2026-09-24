@@ -1,140 +1,186 @@
 "use client";
-import { cn } from "@/lib/utils";
 import {
-  CallControls,
-  CallingState,
   CallParticipantsList,
-  CallStatsButton,
+  CallingState,
   PaginatedGridLayout,
   SpeakerLayout,
+  StreamTheme,
+  useCall,
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
-import React, { useState } from "react";
+import { Circle, Copy, Users, WifiOff } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Copy, LayoutList, Users } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-
-import Loader from "./Loader";
-import EndCallButton from "./EndCallButton";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useToast } from "@/hooks/use-toast";
+import Loader from "./Loader";
+import RoomControls, { type CallLayoutType } from "./meeting/RoomControls";
+import { releaseDevices } from "./meeting/releaseDevices";
 
-type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 const MeetingRoom = () => {
   const { toast } = useToast();
+  const call = useCall();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const isPersonalRoom = !!searchParams.get("personal");
-  const [layout, setLayout] = useState<CallLayoutType>("speaker-left");
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
+  const [layout, setLayout] = useState<CallLayoutType>("speaker-left");
   const [showParticipants, setShowParticipants] = useState(false);
 
-  const { useCallCallingState } = useCallStateHooks();
+  const {
+    useCallCallingState,
+    useCallCustomData,
+    useIsCallRecordingInProgress,
+    useParticipantCount,
+  } = useCallStateHooks();
   const callingState = useCallCallingState();
+  const custom = useCallCustomData();
+  const isRecording = useIsCallRecordingInProgress();
+  const participantCount = useParticipantCount();
 
-  if (callingState !== CallingState.JOINED) return <Loader />;
+  // If the page is left any other way (back button, closing the route), leave the call and free the devices.
+  // The timer keeps React StrictMode's simulated unmount from leaving the call in development.
+  const leaveTimer = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => {
+    if (!call) return;
+    clearTimeout(leaveTimer.current);
+    return () => {
+      leaveTimer.current = setTimeout(async () => {
+        await call.leave().catch(() => {});
+        await releaseDevices(call);
+      }, 0);
+    };
+  }, [call]);
 
-  const CallLayout = () => {
-    switch (layout) {
-      case "grid":
-        return <PaginatedGridLayout />;
-      case "speaker-right":
-        return <SpeakerLayout participantsBarPosition="left" />;
-      default:
-        return <SpeakerLayout participantsBarPosition="right" />;
-    }
-  };
+  const hasLeft = callingState === CallingState.LEFT;
+  useEffect(() => {
+    if (hasLeft && call) releaseDevices(call);
+  }, [hasLeft, call]);
 
-  interface GetMeetingId {
-    (url: string): string;
+  if (hasLeft) {
+    return (
+      <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-ink px-6 text-center text-white">
+        <h1 className="text-2xl font-bold">Meeting ended</h1>
+        <p className="max-w-sm text-sm text-white/70">You have left this meeting.</p>
+        <Button asChild variant="accent">
+          <Link href="/dashboard">Back to dashboard</Link>
+        </Button>
+      </div>
+    );
   }
 
-  const getMeetingId: GetMeetingId = (url) => {
-    return url.split("/meeting/")[1];
+  if (callingState === CallingState.JOINING || callingState === CallingState.IDLE) {
+    return (
+      <div className="flex h-dvh items-center justify-center bg-ink text-white">
+        <Loader />
+      </div>
+    );
+  }
+
+  const title =
+    (custom?.description as string | undefined) ||
+    (isPersonalRoom ? "Personal room" : "Meeting");
+  const disconnected =
+    callingState === CallingState.RECONNECTING ||
+    callingState === CallingState.OFFLINE ||
+    callingState === CallingState.MIGRATING;
+
+  const copyLink = async () => {
+    if (!call) return;
+    await navigator.clipboard.writeText(`${window.location.origin}/meeting/${call.id}`);
+    toast({ title: "Meeting link copied" });
   };
 
-  const url = window.location.href;
-
-  const meetingId = getMeetingId(url);
-
-  const meetingLink = `${window.location.origin}/meeting/${meetingId}`;
+  const renderLayout = () => {
+    if (layout === "grid") return <PaginatedGridLayout />;
+    // On small screens the participant strip sits below the speaker.
+    if (!isDesktop) return <SpeakerLayout participantsBarPosition="bottom" />;
+    return (
+      <SpeakerLayout
+        participantsBarPosition={layout === "speaker-right" ? "left" : "right"}
+      />
+    );
+  };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden pt-4 text-white ">
-      <div className="relative flex size-full items-center justify-center">
-        <div className="flex size-full max-w-[1000px] items-center">
-          <CallLayout />
+    <section className="relative flex h-dvh w-full flex-col overflow-hidden bg-ink text-white">
+      <header className="flex items-center justify-between gap-3 px-3 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] md:px-5">
+        <div className="min-w-0">
+          <h1 className="truncate text-sm font-bold md:text-base">{title}</h1>
+          <p className="flex items-center gap-1.5 text-xs tabular-nums text-white/60">
+            <Users size={12} aria-hidden />
+            {participantCount} {participantCount === 1 ? "participant" : "participants"}
+          </p>
         </div>
+        {isRecording && (
+          <span
+            role="status"
+            className="flex shrink-0 items-center gap-1.5 rounded-full bg-live/15 px-3 py-1.5 text-xs font-bold text-live"
+          >
+            <Circle size={8} fill="currentColor" className="animate-pulse-live" aria-hidden />
+            Recording
+          </span>
+        )}
+      </header>
 
+      {disconnected && (
         <div
-          className={cn("h-[calc(100vh-86px)] hidden ml-2", {
-            "show-block": showParticipants,
-          })}
+          role="status"
+          className="mx-3 mb-2 flex items-center gap-2 rounded-lg bg-yellow-1/15 px-3 py-2 text-sm font-semibold text-yellow-1 md:mx-5"
         >
-          <CallParticipantsList onClose={() => setShowParticipants(false)} />
+          <WifiOff size={16} aria-hidden /> Reconnecting…
         </div>
-      </div>
+      )}
 
-      <div className="fixed bottom-4 flex w-full items-center justify-center gap-5 flex-wrap px-3">
-        <CallControls onLeave={() => router.push("/dashboard")} />
+      <div className="relative flex min-h-0 flex-1 gap-3 px-2 pb-2 md:px-5">
+        <div className="relative min-w-0 flex-1">
+          <div className="h-full">{renderLayout()}</div>
 
-        <DropdownMenu>
-          <div className="flex items-center">
-            <DropdownMenuTrigger className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]">
-              <LayoutList size={20} className="text-white" />
-            </DropdownMenuTrigger>
-          </div>
-          <DropdownMenuContent className="border-dark-1 bg-dark-1 text-white">
-            {["Grid", "Speaker-Left", "Speaker-Right"].map((item, index) => (
-              <div key={index}>
-                <DropdownMenuItem
-                  onClick={() =>
-                    setLayout(item.toLowerCase() as CallLayoutType)
-                  }
-                  className="cursor-pointer"
-                >
-                  {item}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="border-dark-1" />
+          {participantCount <= 1 && (
+            <div className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center px-3">
+              <div className="pointer-events-auto flex max-w-full items-center gap-3 rounded-xl border border-gray-900/80 bg-dark-3/95 py-2 pl-4 pr-2 text-sm shadow-xl backdrop-blur">
+                <span className="truncate text-white/80">You&rsquo;re the only one here.</span>
+                <Button variant="accent" size="sm" onClick={copyLink} className="shrink-0 gap-1.5">
+                  <Copy aria-hidden /> Copy link
+                </Button>
               </div>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <CallStatsButton />
-
-        <button onClick={() => setShowParticipants((prev) => !prev)}>
-          <div className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]">
-            <Users size={20} className="text-white" />
-          </div>
-        </button>
-
-        <div className="flex items-center gap-5">
-          {!isPersonalRoom && (
-            <div>
-              <button
-                className="cursor-pointer rounded-lg bg-dark-4 border border-gray-900/80 px-4 py-3.5 flex items-center text-xs gap-2 hover:opacity-90"
-                onClick={() => {
-                  navigator.clipboard.writeText(meetingLink);
-                  toast({
-                    title: "Link Copied",
-                  });
-                }}
-              >
-                {" "}
-                <Copy size={14} /> Copy Meet link
-              </button>
             </div>
           )}
-
-          {!isPersonalRoom && <EndCallButton />}
         </div>
+
+        {showParticipants && isDesktop && (
+          <aside className="w-80 shrink-0" aria-label="Participants">
+            <CallParticipantsList onClose={() => setShowParticipants(false)} />
+          </aside>
+        )}
       </div>
+
+      <RoomControls
+        layout={layout}
+        onLayout={setLayout}
+        panelOpen={showParticipants}
+        onTogglePanel={() => setShowParticipants((v) => !v)}
+        isPersonal={isPersonalRoom}
+      />
+
+      {!isDesktop && (
+        <Sheet open={showParticipants} onOpenChange={setShowParticipants}>
+          <SheetContent
+            side="bottom"
+            className="h-[75dvh] rounded-t-2xl border-gray-900/80 bg-ink p-0 text-white"
+          >
+            <SheetTitle className="sr-only">Participants</SheetTitle>
+            {/* The sheet supplies its own close button, so hide the list's. */}
+            <StreamTheme className="syntra-call h-full !bg-transparent p-3 pt-12 [&_.str-video__participant-list]:border-0 [&_.str-video__participant-list]:p-0 [&_.str-video__participant-list-header__close-button]:hidden">
+              <CallParticipantsList onClose={() => setShowParticipants(false)} />
+            </StreamTheme>
+          </SheetContent>
+        </Sheet>
+      )}
     </section>
   );
 };
