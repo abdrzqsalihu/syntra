@@ -2,8 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+/* Fraunces: soft, slightly wonky terminals echo Nunito's rounded forms */
+.font-display {
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+@layer base {
+  :root {
+    /* Syntra tokens (space-separated RGB for alpha support) */
+    --ink: 1 0 15; /* original dark-1 */
+    --surface: 0 5 25; /* original dark-3 */
+    --line: 17 24 39; /* original gray-900 hairline */
+    --line-strong: 31 41 55; /* gray-800 for hover/emphasis */
+    --fg: 255 255 255;
+    --violet: 203 60 255; /* original dark-2 violet */
+    --live: 255 84 84; /* recording indicator */
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-nunito), system-ui, sans-serif;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--violet));
+    outline-offset: 2px;
+  }
 }
 
 @layer base {

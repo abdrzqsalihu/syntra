@@ -2,7 +2,7 @@
 export const sidebarLinks = [
   {
     icon: "Home", // Use identifier string
-    route: "/",
+    route: "/dashboard",
     label: "Dashboard",
   },
   {

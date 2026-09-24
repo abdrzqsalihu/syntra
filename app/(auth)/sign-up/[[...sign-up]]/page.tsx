@@ -1,12 +1,8 @@
+import type { Metadata } from "next";
 import { SignUp } from "@clerk/nextjs";
-import React from "react";
 
-const SignUpPage = () => {
-  return (
-    <main className="flex h-screen w-full items-center justify-center">
-      <SignUp />
-    </main>
-  );
-};
+export const metadata: Metadata = { title: "Create account" };
 
-export default SignUpPage;
+export default function SignUpPage() {
+  return <SignUp />;
+}

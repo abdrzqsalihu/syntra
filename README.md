@@ -39,10 +39,15 @@ Syntra is a modern audio and video meeting management application designed to ma
    - Create a `.env.local` file in the root directory.  
    - Add the following variables:  
      ```env  
-     NEXT_PUBLIC_CLERK_FRONTEND_API=<your-clerk-frontend-api>  
-     CLERK_API_KEY=<your-clerk-api-key>  
-     STREAM_API_KEY=<your-stream-api-key>  
-     STREAM_SECRET=<your-stream-secret>  
+     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>  
+     CLERK_SECRET_KEY=<your-clerk-secret-key>
+     NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+     NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+     NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
+     NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/dashboard  
+     NEXT_PUBLIC_STREAM_API_KEY=<your-stream-api-key>  
+     STREAM_SECRET_KEY=<your-stream-secret>
+     NEXT_PUBLIC_BASE_URL=http://localhost:3000  
      ```  
 
 5. Start the development server:  

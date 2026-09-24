@@ -33,7 +33,7 @@ const Home = () => {
           </div>
         </div>
         <Link
-          href={"personal-room"}
+          href="/personal-room"
           className="text-white text-sm md:text-base bg-dark-2 hover:bg-dark-2/90 p-2 px-3 rounded-md flex items-center gap-1 shadow-sm w-fit"
         >
           <User size={20} /> Personal Room
