@@ -115,7 +115,9 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
             link={
               type === "recordings"
                 ? (meeting as CallRecording).url
-                : `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${
+                : `${(
+                    process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+                  ).replace(/\/+$/, "")}/meeting/${
                     (meeting as Call).id
                   }`
             }
@@ -123,7 +125,12 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
             buttonText={type === "recordings" ? "Play" : "Start"}
             handleClick={
               type === "recordings"
-                ? () => router.push(`${(meeting as CallRecording).url}`)
+                ? () =>
+                    window.open(
+                      (meeting as CallRecording).url,
+                      "_blank",
+                      "noopener,noreferrer"
+                    )
                 : () => router.push(`/meeting/${(meeting as Call).id}`)
             }
           />

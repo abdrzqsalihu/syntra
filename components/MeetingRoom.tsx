@@ -38,8 +38,7 @@ const MeetingRoom = () => {
   const { useCallCallingState } = useCallStateHooks();
   const callingState = useCallCallingState();
 
-  if (callingState !== CallingState.JOINED) return;
-  <Loader />;
+  if (callingState !== CallingState.JOINED) return <Loader />;
 
   const CallLayout = () => {
     switch (layout) {
@@ -64,7 +63,7 @@ const MeetingRoom = () => {
 
   const meetingId = getMeetingId(url);
 
-  const meetingLink = `/meeting/${meetingId}`;
+  const meetingLink = `${window.location.origin}/meeting/${meetingId}`;
 
   return (
     <section className="relative h-screen w-full overflow-hidden pt-4 text-white ">
@@ -83,7 +82,7 @@ const MeetingRoom = () => {
       </div>
 
       <div className="fixed bottom-4 flex w-full items-center justify-center gap-5 flex-wrap px-3">
-        <CallControls onLeave={() => router.push("/")} />
+        <CallControls onLeave={() => router.push("/dashboard")} />
 
         <DropdownMenu>
           <div className="flex items-center">

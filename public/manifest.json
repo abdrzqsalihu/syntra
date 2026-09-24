@@ -2,7 +2,7 @@
     "name": "Syntra",
     "short_name": "Syntra",
     "description": "Manage, join, schedule meetings, and access past recordings, all in one app.",
-    "start_url": "/",
+    "start_url": "/dashboard",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",

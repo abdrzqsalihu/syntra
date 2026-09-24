@@ -9,10 +9,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import ServiceWorker from "@/components/ServiceWorker";
 import { Analytics } from "@vercel/analytics/next";
 
-const nunito = Nunito({ subsets: ["latin"] });
+const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
 
 export const metadata: Metadata = {
-  title: "Syntra",
+  title: { default: "Syntra", template: "%s · Syntra" },
   description:
     "Manage, join, schedule meetings, and access past recordings, all in one app.",
   icons: {
@@ -50,7 +50,7 @@ export default function RootLayout({
           <link rel="apple-touch-icon" href="/icon-192x192.png" />
         </head>
         <body
-          className={`${nunito.className} antialiased bg-dark-1`}
+          className={`${nunito.variable} font-sans antialiased bg-ink text-fg`}
           suppressHydrationWarning={true}
         >
           {children}

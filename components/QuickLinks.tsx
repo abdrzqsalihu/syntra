@@ -75,7 +75,10 @@ function QuickLinks() {
 
   if (!client || !user) return <Loader />;
 
-  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${callDetail?.id}`;
+  const origin = (
+    process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+  ).replace(/\/+$/, "");
+  const meetingLink = `${origin}/meeting/${callDetail?.id}`;
 
   return (
     <div className="mt-8 md:mt-12 border border-gray-900/80 px-6 md:px-10 p-10 rounded-xl">
@@ -170,7 +173,16 @@ function QuickLinks() {
         title="Paste the link here"
         className="text-center"
         buttonText="Join Meeting"
-        handleClick={() => router.push(values.link)}
+        handleClick={() => {
+          const raw = values.link.trim();
+          const match = raw.match(/\/meeting\/([^/?#\s]+)/);
+          const id = match ? match[1] : /^[\w-]+$/.test(raw) ? raw : null;
+          if (!id) {
+            toast({ title: "That does not look like a meeting link" });
+            return;
+          }
+          router.push(`/meeting/${id}`);
+        }}
       >
         <Input
           placeholder="Meeting link"
