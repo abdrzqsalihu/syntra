@@ -18,6 +18,7 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useToast } from "@/hooks/use-toast";
 import Loader from "./Loader";
+import JoinRequests from "./meeting/JoinRequests";
 import RoomControls, { type CallLayoutType } from "./meeting/RoomControls";
 import { releaseDevices } from "./meeting/releaseDevices";
 
@@ -108,23 +109,36 @@ const MeetingRoom = () => {
 
   return (
     <section className="relative flex h-dvh w-full flex-col overflow-hidden bg-ink text-white">
-      <header className="flex items-center justify-between gap-3 px-3 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] md:px-5">
-        <div className="min-w-0">
-          <h1 className="truncate text-sm font-bold md:text-base">{title}</h1>
-          <p className="flex items-center gap-1.5 text-xs tabular-nums text-white/60">
-            <Users size={12} aria-hidden />
-            {participantCount} {participantCount === 1 ? "participant" : "participants"}
-          </p>
-        </div>
-        {isRecording && (
+      <header className="flex shrink-0 items-center justify-between gap-3 px-3 pb-1.5 pt-[max(0.5rem,env(safe-area-inset-top))] md:px-5">
+        <div className="flex min-w-0 items-center gap-2">
+          <h1 className="truncate text-sm font-bold">{title}</h1>
           <span
-            role="status"
-            className="flex shrink-0 items-center gap-1.5 rounded-full bg-live/15 px-3 py-1.5 text-xs font-bold text-live"
+            className="flex shrink-0 items-center gap-1 rounded-full bg-white/[0.07] px-2 py-0.5 text-xs tabular-nums text-white/70"
+            aria-label={`${participantCount} ${participantCount === 1 ? "participant" : "participants"}`}
           >
-            <Circle size={8} fill="currentColor" className="animate-pulse-live" aria-hidden />
-            Recording
+            <Users size={12} aria-hidden />
+            {participantCount}
           </span>
-        )}
+        </div>
+        <div className="flex items-center gap-2">
+          {isRecording && (
+            <span
+              role="status"
+              className="flex shrink-0 items-center gap-1.5 rounded-full bg-live/15 px-2.5 py-1 text-[11px] font-bold text-live"
+            >
+              <Circle size={7} fill="currentColor" className="animate-pulse-live" aria-hidden />
+              Recording
+            </span>
+          )}
+          <Button
+            variant="quiet"
+            size="sm"
+            onClick={copyLink}
+            className="hidden h-8 gap-1.5 px-3 text-xs text-white md:inline-flex"
+          >
+            <Copy size={14} aria-hidden /> Copy invite link
+          </Button>
+        </div>
       </header>
 
       {disconnected && (
@@ -136,15 +150,17 @@ const MeetingRoom = () => {
         </div>
       )}
 
-      <div className="relative flex min-h-0 flex-1 gap-3 px-2 pb-2 md:px-5">
+      <div className="relative flex min-h-0 flex-1 justify-center px-2 pb-2 md:px-5">
+        <JoinRequests />
+        <div className="relative flex h-full w-full max-w-[1400px] gap-3">
         <div className="relative min-w-0 flex-1">
           <div className="h-full">{renderLayout()}</div>
 
           {participantCount <= 1 && (
             <div className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center px-3">
-              <div className="pointer-events-auto flex max-w-full items-center gap-3 rounded-xl border border-gray-900/80 bg-dark-3/95 py-2 pl-4 pr-2 text-sm shadow-xl backdrop-blur">
+              <div className="pointer-events-auto flex max-w-full items-center gap-2 rounded-xl border border-gray-900/80 bg-dark-3/95 py-1.5 pl-3 pr-1.5 text-xs shadow-xl backdrop-blur">
                 <span className="truncate text-white/80">You&rsquo;re the only one here.</span>
-                <Button variant="accent" size="sm" onClick={copyLink} className="shrink-0 gap-1.5">
+                <Button variant="accent" size="sm" onClick={copyLink} className="h-8 shrink-0 gap-1.5 px-3 text-xs">
                   <Copy aria-hidden /> Copy link
                 </Button>
               </div>
@@ -153,10 +169,11 @@ const MeetingRoom = () => {
         </div>
 
         {showParticipants && isDesktop && (
-          <aside className="w-80 shrink-0" aria-label="Participants">
+          <aside className="w-72 shrink-0" aria-label="Participants">
             <CallParticipantsList onClose={() => setShowParticipants(false)} />
           </aside>
         )}
+        </div>
       </div>
 
       <RoomControls

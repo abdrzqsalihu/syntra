@@ -4,7 +4,7 @@ import { useUser } from "@clerk/nextjs";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { useRouter } from "next/navigation";
 
-import { useGetCallById } from "@/hooks/useGetCallById";
+import { ensurePersonalRoom } from "@/actions/meeting.actions";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, LucideVideo } from "lucide-react";
@@ -18,19 +18,16 @@ const PersonalRoom = () => {
 
   const meetingId = user?.id;
 
-  const { call } = useGetCallById(meetingId!);
-
   const startRoom = async () => {
     if (!client || !user) return;
 
-    const newCall = client.call("default", meetingId!);
-
-    if (!call) {
-      await newCall.getOrCreate({
-        data: {
-          starts_at: new Date().toISOString(),
-        },
-      });
+    // The room is created on the server so its owner is registered as the host.
+    try {
+      await ensurePersonalRoom();
+    } catch (error) {
+      console.error(error);
+      toast({ title: "Could not start your room", description: "Try again in a moment." });
+      return;
     }
 
     router.push(`/meeting/${meetingId}?personal=true`);

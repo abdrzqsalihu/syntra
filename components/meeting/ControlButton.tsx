@@ -36,7 +36,7 @@ export const ControlButton = forwardRef<HTMLButtonElement, Props>(
         title={label}
         aria-pressed={pressed}
         className={cn(
-          "relative inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-gray-900/80 transition-colors",
+          "relative inline-flex size-11 shrink-0 md:size-10 items-center justify-center rounded-xl border border-gray-900/80 transition-colors",
           "active:scale-95 disabled:pointer-events-none disabled:opacity-40",
           tones[tone],
           className

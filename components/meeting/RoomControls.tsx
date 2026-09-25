@@ -479,16 +479,15 @@ export default function RoomControls({
   const { useParticipantCount } = useCallStateHooks();
   const count = useParticipantCount();
   const { toggleCallRecording, isAwaitingResponse } = useToggleCallRecording();
-  const copy = useCopyLink();
   const [moreOpen, setMoreOpen] = useState(false);
   const [devicesOpen, setDevicesOpen] = useState(false);
   const [confirmStop, setConfirmStop] = useState(false);
 
   return (
     <>
-      <div className="border-t border-gray-900/80 bg-ink/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur md:px-5">
-        {/* Mobile: five primary controls; everything else lives in "More". */}
-        <div className="mx-auto flex max-w-md items-center justify-between gap-1.5 md:hidden">
+      <div className="px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1 md:pb-3">
+        {/* Mobile: six primary controls in one pill; everything else lives in "More". */}
+        <div className="mx-auto flex w-full max-w-sm items-center justify-between gap-1 rounded-2xl border border-gray-900/80 bg-dark-3/90 p-1.5 md:hidden">
           <MicButton />
           <CameraButton />
           <ReactionsButton />
@@ -507,29 +506,20 @@ export default function RoomControls({
           <LeaveMenu isPersonal={isPersonal} />
         </div>
 
-        {/* Desktop and tablet */}
-        <div className="mx-auto hidden max-w-[1400px] grid-cols-[1fr_auto_1fr] items-center gap-4 md:grid">
-          <div className="flex items-center">
-            <Button variant="quiet" size="sm" onClick={copy} className="gap-2 text-white">
-              <Copy aria-hidden /> Copy invite link
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <MicButton />
-            <CameraButton />
-            <ReactionsButton />
-            <ShareButton />
-            <RecordButton onStopRequest={() => setConfirmStop(true)} />
-            <LeaveMenu isPersonal={isPersonal} />
-          </div>
-          <div className="flex items-center justify-end gap-2">
+        {/* Desktop and tablet: one compact pill, grouped by purpose */}
+        <div className="mx-auto hidden w-fit items-center gap-1 rounded-2xl border border-gray-900/80 bg-dark-3/90 p-1.5 md:flex">
+          <MicButton />
+          <CameraButton />
+          <ReactionsButton />
+          <ShareButton />
+          <RecordButton onStopRequest={() => setConfirmStop(true)} />
+          <span aria-hidden className="mx-1 h-6 w-px bg-white/10" />
+          <div className="flex items-center gap-1">
             <LayoutMenu layout={layout} onLayout={onLayout} />
             <ControlButton label="Devices" onClick={() => setDevicesOpen(true)}>
               <Settings2 size={20} aria-hidden />
             </ControlButton>
-            <div className="[&_.str-video__composite-button]:!size-11 [&_.str-video__composite-button]:!rounded-xl">
-              <CallStatsButton />
-            </div>
+            <CallStatsButton />
             <ControlButton
               label={panelOpen ? "Hide participants" : "Show participants"}
               tone={panelOpen ? "on" : "default"}
@@ -540,6 +530,8 @@ export default function RoomControls({
               <Users size={20} aria-hidden />
             </ControlButton>
           </div>
+          <span aria-hidden className="mx-1 h-6 w-px bg-white/10" />
+          <LeaveMenu isPersonal={isPersonal} />
         </div>
       </div>
 

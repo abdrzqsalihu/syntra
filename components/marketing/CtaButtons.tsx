@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { cn } from "@/lib/utils";
 import Magnetic from "./Magnetic";
 
@@ -11,7 +11,10 @@ const primary: Record<Tone, string> = {
   ink: "bg-plum-950 text-white hover:bg-white hover:text-plum-950",
 };
 
-export default function CtaButtons({ tone = "violet" }: { tone?: Tone }) {
+export default async function CtaButtons({ tone = "violet" }: { tone?: Tone }) {
+  // Read on the server so the buttons are in the first HTML rather than waiting for Clerk in the browser.
+  const { userId } = await auth();
+  const signedIn = !!userId;
   const pill = cn(
     "group inline-flex h-14 items-center gap-2 rounded-full pl-7 pr-5 text-base font-bold transition-colors duration-300",
     primary[tone]
@@ -24,7 +27,21 @@ export default function CtaButtons({ tone = "violet" }: { tone?: Tone }) {
   );
   return (
     <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-      <SignedOut>
+      {signedIn ? (
+        <>
+        <Magnetic>
+          <Link href="/dashboard" className={pill}>
+            Open dashboard
+            <ArrowUpRight
+              size={20}
+              aria-hidden
+              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </Link>
+        </Magnetic>
+      </>
+      ) : (
+        <>
         <Magnetic>
           <Link href="/sign-up" className={pill}>
             Start a meeting
@@ -38,19 +55,8 @@ export default function CtaButtons({ tone = "violet" }: { tone?: Tone }) {
         <Link href="/sign-in" className={link}>
           Sign in
         </Link>
-      </SignedOut>
-      <SignedIn>
-        <Magnetic>
-          <Link href="/dashboard" className={pill}>
-            Open dashboard
-            <ArrowUpRight
-              size={20}
-              aria-hidden
-              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            />
-          </Link>
-        </Magnetic>
-      </SignedIn>
+      </>
+      )}
     </div>
   );
 }

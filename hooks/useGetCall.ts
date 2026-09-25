@@ -27,7 +27,13 @@ export const useGetCalls = () => {
           },
         });
 
-        setCalls(calls);
+        // Meetings I only asked to join are not mine to start or list.
+        setCalls(
+          calls.filter((c) => {
+            const me = c.state.members.find((m) => m.user_id === user.id);
+            return me?.role !== "pending";
+          })
+        );
       } catch (error) {
         console.error(error);
       } finally {

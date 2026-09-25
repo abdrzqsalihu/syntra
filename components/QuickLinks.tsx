@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import HomeCard from "./HomeCard";
 import MeetingModal from "./MeetingModal";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { createMeeting as createMeetingOnServer } from "@/actions/meeting.actions";
 import { useUser } from "@clerk/nextjs";
 import Loader from "./Loader";
 import { Textarea } from "./ui/textarea";
@@ -46,23 +47,16 @@ function QuickLinks() {
         toast({ title: "Please select a date and time" });
         return;
       }
-      const id = crypto.randomUUID();
-      const call = client.call("default", id);
-      if (!call) throw new Error("Failed to create meeting");
-      const startsAt =
-        values.dateTime.toISOString() || new Date(Date.now()).toISOString();
-      const description = values.description || "Instant Meeting";
-      await call.getOrCreate({
-        data: {
-          starts_at: startsAt,
-          custom: {
-            description,
-          },
-        },
+      // Meetings are created on the server so their owner is registered as the host.
+      // Instant meetings start now; scheduled ones use the picked time.
+      const id = await createMeetingOnServer({
+        description: values.description || "Instant Meeting",
+        startsAt: values.description ? values.dateTime.toISOString() : undefined,
       });
+      const call = client.call("default", id);
       setCallDetail(call);
       if (!values.description) {
-        router.push(`/meeting/${call.id}`);
+        router.push(`/meeting/${id}`);
       }
       toast({
         title: "Meeting Created",
