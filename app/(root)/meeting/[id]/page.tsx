@@ -1,6 +1,7 @@
 "use client";
 import Loader from "@/components/Loader";
 import MeetingRoom from "@/components/MeetingRoom";
+import AccessGate from "@/components/meeting/AccessGate";
 import MeetingSetup from "@/components/MeetingSetup";
 import { Button } from "@/components/ui/button";
 import { useGetCallById } from "@/hooks/useGetCallById";
@@ -13,9 +14,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-const Meeting = ({ params }: PageProps) => {
-  // Unwrap the params Promise using React.use()
-  const { id } = React.use(params);
+const MeetingContent = ({ id }: { id: string }) => {
   const { isLoaded } = useUser();
   const [isSetupComplete, setIsSetupComplete] = useState(false);
   const { call, isCallLoading } = useGetCallById(id);
@@ -52,6 +51,18 @@ const Meeting = ({ params }: PageProps) => {
         </StreamTheme>
       </StreamCall>
     </main>
+  );
+};
+
+const Meeting = ({ params }: PageProps) => {
+  // Unwrap the params Promise using React.use()
+  const { id } = React.use(params);
+
+  // Only the host and people the host has admitted get past the gate.
+  return (
+    <AccessGate callId={id}>
+      <MeetingContent id={id} />
+    </AccessGate>
   );
 };
 

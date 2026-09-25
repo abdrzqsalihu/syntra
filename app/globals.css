@@ -225,8 +225,122 @@
 .syntra-call .str-video__paginated-grid-layout {
   height: 100%;
 }
+/* ---- Compact call layout ---- */
+/* The speaker is a 16:9 tile that fits the space it is given and sits centred, instead of stretching. */
+.syntra-call .str-video__speaker-layout__spotlight {
+  container-type: size;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.syntra-call .str-video__speaker-layout .str-video__speaker-layout__spotlight .str-video__participant-view {
+  aspect-ratio: 16 / 9;
+  width: min(100cqw, calc(100cqh * 16 / 9));
+  height: auto;
+  max-width: none;
+}
+
+/* Portrait tablets: a squarer speaker tile so the tall screen is used */
+@media (min-width: 768px) and (orientation: portrait) {
+  .syntra-call .str-video__speaker-layout .str-video__speaker-layout__spotlight .str-video__participant-view {
+    aspect-ratio: 4 / 3;
+    width: min(100cqw, calc(100cqh * 4 / 3));
+  }
+}
+
+/* Side strip: narrow, evenly spaced tiles */
+.syntra-call .str-video__speaker-layout--variant-left .str-video__speaker-layout__participants-bar-wrapper,
+.syntra-call .str-video__speaker-layout--variant-right .str-video__speaker-layout__participants-bar-wrapper {
+  width: 176px;
+  flex: none;
+}
+.syntra-call .str-video__speaker-layout--variant-left .str-video__speaker-layout__participants-bar,
+.syntra-call .str-video__speaker-layout--variant-right .str-video__speaker-layout__participants-bar {
+  gap: 8px;
+}
+.syntra-call .str-video__speaker-layout.str-video__speaker-layout--variant-left .str-video__speaker-layout__participants-bar-wrapper .str-video__speaker-layout__participants-bar .str-video__speaker-layout__participant-tile,
+.syntra-call .str-video__speaker-layout.str-video__speaker-layout--variant-right .str-video__speaker-layout__participants-bar-wrapper .str-video__speaker-layout__participants-bar .str-video__speaker-layout__participant-tile {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+}
+.syntra-call .str-video__speaker-layout--variant-left .str-video__participant-view,
+.syntra-call .str-video__speaker-layout--variant-right .str-video__participant-view {
+  aspect-ratio: 16 / 10;
+  max-width: none;
+}
+
+/* Bottom strip (tablet): short tiles under the speaker */
+.syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar {
+  gap: 8px;
+}
+.syntra-call .str-video__speaker-layout.str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar-wrapper .str-video__speaker-layout__participants-bar .str-video__speaker-layout__participant-tile {
+  width: 144px;
+  min-width: 144px;
+  max-width: none;
+  padding: 0;
+}
+.syntra-call .str-video__speaker-layout--variant-bottom .str-video__participant-view {
+  aspect-ratio: 16 / 10;
+  max-width: none;
+}
+
+/* Side strip: the speaker tile lines up with the top of the strip; strip avatars are smaller */
+.syntra-call .str-video__speaker-layout--variant-left .str-video__speaker-layout__spotlight,
+.syntra-call .str-video__speaker-layout--variant-right .str-video__speaker-layout__spotlight {
+  align-items: flex-start;
+}
+.syntra-call .str-video__speaker-layout__participants-bar .str-video__video-placeholder .str-video__video-placeholder__initials-fallback,
+.syntra-call .str-video__speaker-layout__participants-bar .str-video__video-placeholder .str-video__video-placeholder__avatar {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+}
+
+/* Grid: tiles keep their shape and the group is centred */
+.syntra-call .str-video__paginated-grid-layout__group {
+  align-content: center;
+  justify-content: center;
+  gap: 8px;
+}
+.syntra-call .str-video__paginated-grid-layout .str-video__participant-view {
+  aspect-ratio: 16 / 9;
+  max-height: 100%;
+}
+
+/* Quieter tiles: smaller radius, controls appear on hover */
+.syntra-call .str-video__participant-view {
+  border-radius: 12px;
+}
+@media (hover: hover) {
+  .syntra-call .str-video__participant-view > .str-video__call-controls__button {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .syntra-call .str-video__participant-view:hover > .str-video__call-controls__button,
+  .syntra-call .str-video__participant-view:focus-within > .str-video__call-controls__button {
+    opacity: 1;
+  }
+}
+.syntra-call .str-video__video-placeholder .str-video__video-placeholder__initials-fallback,
+.syntra-call .str-video__video-placeholder .str-video__video-placeholder__avatar {
+  width: 72px;
+  height: 72px;
+  font-size: 26px;
+}
+
 @media (max-width: 767px) {
   /* Phones: the speaker fills the stage, other participants sit in a compact strip below */
+  .syntra-call .str-video__speaker-layout .str-video__speaker-layout__spotlight .str-video__participant-view {
+    aspect-ratio: auto;
+    width: 100%;
+    height: 100%;
+  }
   .syntra-call .str-video__speaker-layout--variant-bottom {
     gap: 8px;
   }
@@ -241,7 +355,7 @@
   .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar {
     gap: 8px;
   }
-  .syntra-call .str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar-wrapper .str-video__speaker-layout__participants-bar .str-video__speaker-layout__participant-tile {
+  .syntra-call .str-video__speaker-layout.str-video__speaker-layout--variant-bottom .str-video__speaker-layout__participants-bar-wrapper .str-video__speaker-layout__participants-bar .str-video__speaker-layout__participant-tile {
     width: 104px;
     min-width: 104px;
     max-width: none;
@@ -291,8 +405,8 @@
   border: 1px solid rgb(17 24 39 / 0.8);
 }
 .syntra-call .str-video__composite-button__button-group .str-video__call-controls__button {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
   background: transparent;
 }

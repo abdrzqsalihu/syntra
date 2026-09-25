@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -12,7 +11,8 @@ const links = [
   { href: "#recordings", label: "Recordings" },
 ];
 
-export default function SiteHeader() {
+/** Client part of the header (scroll state). Whether the visitor is signed in is decided on the server and passed in. */
+export default function SiteHeaderBar({ signedIn }: { signedIn: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 24);
@@ -45,25 +45,26 @@ export default function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-5">
-          <SignedOut>
-            <Link href="/sign-in" className="hidden text-sm font-semibold text-white/70 transition-colors hover:text-white sm:block">
-              Sign in
-            </Link>
-            <Link
-              href="/sign-up"
-              className="rounded-full bg-accent px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-white hover:text-plum-950"
-            >
-              Get started
-            </Link>
-          </SignedOut>
-          <SignedIn>
+          {signedIn ? (
             <Link
               href="/dashboard"
               className="rounded-full bg-accent px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-white hover:text-plum-950"
             >
               Open dashboard
             </Link>
-          </SignedIn>
+          ) : (
+            <>
+              <Link href="/sign-in" className="hidden text-sm font-semibold text-white/70 transition-colors hover:text-white sm:block">
+                Sign in
+              </Link>
+              <Link
+                href="/sign-up"
+                className="rounded-full bg-accent px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-white hover:text-plum-950"
+              >
+                Get started
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
