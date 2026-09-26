@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
 import ServiceWorker from "@/components/ServiceWorker";
+import SmoothScroll from "@/components/SmoothScroll";
 import { Analytics } from "@vercel/analytics/next";
 
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
@@ -57,6 +58,7 @@ export default function RootLayout({
           suppressHydrationWarning={true}
         >
           {children}
+          <SmoothScroll />
           <Analytics />
           <ServiceWorker />
           <Toaster />

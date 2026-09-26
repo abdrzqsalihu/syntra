@@ -169,7 +169,7 @@ const MeetingRoom = () => {
         </div>
 
         {showParticipants && isDesktop && (
-          <aside className="w-72 shrink-0" aria-label="Participants">
+          <aside data-lenis-prevent className="w-72 shrink-0" aria-label="Participants">
             <CallParticipantsList onClose={() => setShowParticipants(false)} />
           </aside>
         )}

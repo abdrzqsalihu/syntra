@@ -50,7 +50,7 @@ const MobileNav = () => {
             <Image src="/logo-2.png" width={100} height={100} alt="Syntra" />
           </Link>
 
-          <div className="flex h-[calc(100vh-72px)] flex-col justify-between overflow-y-auto">
+          <div data-lenis-prevent className="flex h-[calc(100vh-72px)] flex-col justify-between overflow-y-auto">
             <SheetClose asChild>
               <nav
                 className="flex h-full flex-col gap-5 pt-16 text-white"

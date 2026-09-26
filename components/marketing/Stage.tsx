@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useLenis } from "lenis/react";
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import { cn } from "@/lib/utils";
 import { scenes } from "./StageScenes";
@@ -15,6 +16,7 @@ const steps = [
 export default function Stage() {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
+  const lenis = useLenis();
   const [active, setActive] = useState(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
@@ -30,7 +32,9 @@ export default function Stage() {
       return;
     }
     const top = el.offsetTop + ((i + 0.5) / steps.length) * (el.offsetHeight - window.innerHeight);
-    window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+    // Lenis owns smooth scrolling; without it (reduced motion) fall back to the browser.
+    if (lenis) lenis.scrollTo(top);
+    else window.scrollTo({ top, behavior: "auto" });
   };
 
   const Scene = scenes[active];
