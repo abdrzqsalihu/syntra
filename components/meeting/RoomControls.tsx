@@ -336,6 +336,7 @@ function DevicesSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
+        data-lenis-prevent
         className="max-h-[85dvh] overflow-y-auto rounded-t-2xl border-gray-900/80 bg-ink px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-6 text-white md:inset-y-0 md:bottom-auto md:left-auto md:right-0 md:h-full md:max-h-none md:w-[24rem] md:rounded-none md:border-l md:border-t-0"
       >
         <SheetTitle className="text-lg font-bold">Devices</SheetTitle>

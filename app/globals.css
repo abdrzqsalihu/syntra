@@ -7,6 +7,43 @@
   font-variation-settings: "SOFT" 100, "WONK" 1;
 }
 
+/* ======== Scrollbars: thin, quiet, tinted with the Syntra violet ======== */
+:root {
+  --scrollbar-thumb: rgb(203 60 255 / 0.35);
+  --scrollbar-thumb-hover: rgb(203 60 255 / 0.7);
+}
+
+/* Chromium, Edge and Safari. The track is invisible; a 10px hit area holds a 4px thumb that grows a little on hover. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: transparent;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--scrollbar-thumb-hover);
+  border-width: 2px;
+}
+
+/* Firefox and other browsers without ::-webkit-scrollbar. Chromium 121+ would let these override the
+   rules above, so they are only applied where the pseudo-elements are unsupported. */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+}
+
 @layer base {
   :root {
     /* Syntra tokens (space-separated RGB for alpha support) */
@@ -19,18 +56,14 @@
     --live: 255 84 84; /* recording indicator */
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
+  /* Smooth scrolling is handled by Lenis (components/SmoothScroll.tsx); a native
+     scroll-behavior here would fight it, so it is intentionally not set. */
 
   body {
     font-family: var(--font-nunito), system-ui, sans-serif;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
     *,
     *::before,
     *::after {
